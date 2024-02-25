@@ -43,7 +43,7 @@ async function postDeleteExpenseController(req, res) {
         })
         .catch(error => {
             console.error(error);
-            return res.status(404).send('User not found');
+            return res.status(404).send('Expense not found');
         });
         
     } catch (error) {

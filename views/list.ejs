@@ -142,7 +142,7 @@
                         <div>
                             <label for="expenseDate">Date:</label>
                             <input type="date" id="expenseDate" name="date">
-                            <button type="submit">Add Expense</button>
+                            <button id="submitButton" type="submit">Add Expense</button>s
                         </div>
                     </form>
                 </li>
@@ -150,9 +150,7 @@
         </div>
         <div class="sidebar">
             <h2>User Info</h2>
-            <p>Name: </p>
-            <p>Email: </p>
-            <!-- Add more user info fields as needed -->
+            <p>tbd</p>
         </div>
     </div>
     <script>
@@ -180,6 +178,7 @@
             signInput.value = expense.querySelector('#expense-sum').classList.contains('income') ? "true" : "false";
             sumInput.value = parseInt(expense.querySelector('#expense-sum').textContent.trim().substring(2));
             dateInput.value = expense.querySelector('.expense-date').textContent.trim();
+            form.querySelector('#submitButton').textContent = 'Submit Changes';
         }
         
         expenseItems.forEach(expense => {
