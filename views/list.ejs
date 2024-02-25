@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://example.com/image.svg">
+    <title>User Expenses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .expenses {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+        .sidebar {
+            flex-basis: 200px;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .expense-name {
+            font-weight: bold;
+        }
+        .income {
+            color: green;
+        }
+        .expense {
+            color: red;
+        }
+        .delete-btn {
+            background-color: #ff6666;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .add-expense-form {
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .add-expense-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .add-expense-form input,
+        .add-expense-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .add-expense-form button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="expenses">
+            <h2>Expenses</h2>
+            <ul>
+                <% expenses.forEach(expense => { %>
+                    <li>
+                        <div class="expense-item">
+                            <div>
+                                <span class="expense-name"><%= expense.name %></span><br>
+                                <% if (expense.sign) { %>
+                                    <span class="income">+ <%= expense.sum %></span>
+                                <% } else { %>
+                                    <span class="expense">- <%= expense.sum %></span>
+                                <% } %>
+                            </div>
+                            <div>
+                                <span><%= expense.date %></span>
+                                <form action="/delete/<%= expense._id %>" method="post">
+                                    <button class="delete-btn" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+            <h3>Add New Expense</h3>
+            <div class="add-expense-form">
+                <form action="/new" method="post">
+                    <label for="expenseName">Expense Name:</label>
+                    <input type="text" id="expenseName" name="name">
+                    <label for="expenseSum">Amount:</label>
+                    <input type="number" id="expenseSum" name="sum">
+                    <label for="expenseSign">Type:</label>
+                    <select id="expenseSign" name="sign">
+                        <option value="true">Income</option>
+                        <option value="false">Expense</option>
+                    </select>
+                    <label for="expenseDate">Date:</label>
+                    <input type="text" id="expenseDate" name="date">
+                    <button type="submit">Add Expense</button>
+                </form>
+            </div>
+        </div>
+        <div class="sidebar">
+            <h2>User Info</h2>
+            <p>Name: </p>
+            <p>Email: </p>
+            <!-- Add more user info fields as needed -->
+        </div>
+    </div>
+</body>
+</html>

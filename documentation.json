@@ -1,0 +1,12 @@
+[
+    {
+        "title" : "endpoints",
+        "/html1" : "returns page one",
+        "/html2" : "returns page two",
+        "/file/:filename" : "returns file from /assets directory with specified filename",
+        "/objects" : "returns array of types wih corresponding to them arrays of objects",
+        "/objects/:type" : "returns array of objects of specified type",
+        "/objects/:type/:id" : "returns object of specified type with specified id",
+        "/info" : "returns this file"
+    }
+]
