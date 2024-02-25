@@ -52,9 +52,34 @@ async function postDeleteExpenseController(req, res) {
     }
 }
 
+async function postChangeExpenseController(req, res) {
+    try {
+        const { id, name, sum, sign, date } = req.body;
+        
+        const expense = await Expense.findById(id);
+        
+        if (!expense) {
+            return res.status(404).json({ error: 'Expense not found' });
+        }
+
+        expense.name = name;
+        expense.sum = sum;
+        expense.sign = sign;
+        expense.date = date;
+
+        await expense.save();
+
+        res.redirect('/');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     ExpensesListController,
     getExpenseByIdController,
     postNewExpenseController,
-    postDeleteExpenseController
+    postDeleteExpenseController,
+    postChangeExpenseController,
 }
