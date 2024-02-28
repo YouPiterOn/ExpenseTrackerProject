@@ -29,6 +29,17 @@
             border: 1px solid #ccc;
             padding: 20px;
         }
+        .logOutBtn {
+            border-radius: 5px;
+            background-color: #ff6666;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .logOutBtn:hover {
+            background-color:#ae3838
+        }
         h1 {
             margin-top: 12px;
             margin-bottom: 12px;
@@ -44,16 +55,51 @@
             border: 1px solid #ccc;
             border-radius: 10px;
         }
-        .expense-item {
+
+
+        .sortingForm {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .sortingForm label {
+            display: block;
+        }
+        .sortingForm input,
+        .sortingForm select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .sortingForm button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 20px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .sortingForm button:hover {
+            background-color: #0056b3;
+        }
+
+
+
+        .expenseItem {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px;
         }
-        .expense-id {
+        .expenseId {
             display: none;
         }
-        .expense-name {
+        .expenseName {
             width: 33%;
             font-weight: bold;
         }
@@ -63,7 +109,7 @@
         .expense {
             color: red;
         }
-        .delete-btn {
+        .deleteBtn {
             border-radius: 5px;
             background-color: #ff6666;
             color: white;
@@ -71,7 +117,10 @@
             padding: 5px 10px;
             cursor: pointer;
         }
-        .add-expense-form {
+        .deleteBtn:hover {
+            background-color:#ae3838
+        }
+        .addExpenseForm {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -79,25 +128,28 @@
             border-radius: 10px;
             padding: 20px;
         }
-        .add-expense-form label {
+        .addExpenseForm label {
             display: block;
             margin-bottom: 10px;
         }
-        .add-expense-form input,
-        .add-expense-form select {
+        .addExpenseForm input,
+        .addExpenseForm select {
             width: 90%;
             padding: 8px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .add-expense-form button {
+        .addExpenseForm button {
             background-color: #007bff;
             color: white;
             border: none;
             padding: 10px 20px;
             cursor: pointer;
             border-radius: 4px;
+        }
+        .addExpenseForm button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -106,42 +158,63 @@
         <div class="expenses">
             <h1>Your expenses</h1>
             <ul>
+                <li>
+                    <form class="sortingForm" action="/" method="get">
+                        <div>
+                            <label for="sortBy">Sort By:</label>
+                            <select name="sortBy" id="sortBy">
+                                <option value="date">Date</option>
+                                <option value="sum">Sum</option>
+                                <option value="name">Name</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="sortOrder">Sort Order:</label>
+                            <select name="sortOrder" id="sortOrder">
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit">Sort</button>
+                    </form>
+                </li>
                 <% expenses.forEach(expense => { %>
                     <li>
-                        <div class="expense-item">
-                            <span class="expense-name"><%= expense.name %></span><br>
-                            <span class="expense-id"><%= expense._id%></span>
+                        <div class="expenseItem">
+                            <span class="expenseName"><%= expense.name %></span><br>
+                            <span class="expenseId"><%= expense._id%></span>
                             <% if (expense.sign) { %>
-                                <span id="expense-sum" class="income">+ <%= expense.sum %></span>
+                                <span id="expenseSum" class="income">+ <%= expense.sum %></span>
                             <% } else { %>
-                                <span id="expense-sum" class="expense">- <%= expense.sum %></span>
+                                <span id="expenseSum" class="expense">- <%= expense.sum %></span>
                             <% } %>
-                            <span class="expense-date"><%= expense.date %></span>
+                            <span class="expenseDate"><%= expense.date %></span>
                             <form action="/delete/<%= expense._id %>" method="post">
-                                <button class="delete-btn" type="submit">Delete</button>
+                                <button class="deleteBtn" type="submit">Delete</button>
                             </form>
                         </div>
                     </li>
                 <% }) %>
                 <li>
-                    <form class="add-expense-form" action="/new" method="post">
-                        <input type="hidden" id="expenseId" name="id" value="">
+                    <form class="addExpenseForm" action="/new" method="post">
+                        <input type="hidden" id="newExpenseId" name="id" value="">
                         <div>
-                            <label for="expenseName">Name:</label>
-                            <input type="text" id="expenseName" name="name">
-                            <label for="expenseSum">Amount:</label>
-                            <input type="number" id="expenseSum" name="sum">
+                            <label for="newExpenseName">Name:</label>
+                            <input type="text" id="newExpenseName" name="name">
+                            <label for="newExpenseSum">Amount:</label>
+                            <input type="number" id="newExpenseSum" name="sum">
                         </div>
                         <div>
-                            <label for="expenseSign">Type:</label>
-                            <select id="expenseSign" name="sign">
+                            <label for="newExpenseSign">Type:</label>
+                            <select id="newExpenseSign" name="sign">
                                 <option value="true">Income</option>
                                 <option value="false">Expense</option>
                             </select>
                         </div>
                         <div>
-                            <label for="expenseDate">Date:</label>
-                            <input type="date" id="expenseDate" name="date">
+                            <label for="newExpenseDate">Date:</label>
+                            <input type="date" id="newExpenseDate" name="date">
                             <button id="submitButton" type="submit">Add Expense</button>
                         </div>
                     </form>
@@ -149,19 +222,23 @@
             </ul>
         </div>
         <div class="sidebar">
-            <h2>User Info</h2>
-            <p>tbd</p>
+            <h3>Logged in as</h3>
+            <p id="username"><%= username %></p>
+            <form action="/user/logout" method="post">
+                <button class="logOutBtn" type="submit">Log out</button>
+            </form>
         </div>
     </div>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const form = document.querySelector('.add-expense-form');
-        const idInput = form.querySelector('#expenseId')
-        const nameInput = form.querySelector('#expenseName');
-        const sumInput = form.querySelector('#expenseSum');
-        const signInput = form.querySelector('#expenseSign');
-        const dateInput = form.querySelector('#expenseDate');
+        const form = document.querySelector('.addExpenseForm');
+        const idInput = form.querySelector('#newExpenseId')
+        const nameInput = form.querySelector('#newExpenseName');
+        const sumInput = form.querySelector('#newExpenseSum');
+        const signInput = form.querySelector('#newExpenseSign');
+        const dateInput = form.querySelector('#newExpenseDate');
         
-        const expenseItems = document.querySelectorAll('.expense-item');
+        const expenseItems = document.querySelectorAll('.expenseItem');
         
         form.addEventListener('submit', function(event) {
             if(!nameInput.value || !sumInput.value || !dateInput.value){
@@ -171,13 +248,13 @@
 
         function editExpense(expense) {
             form.action = "/change";
-            const sum = expense.querySelector('#expense-sum').textContent.substring(2)
+            const sum = expense.querySelector('#expenseSum').textContent.substring(2)
             console.log(sum);
-            idInput.value = expense.querySelector('.expense-id').textContent.trim();
-            nameInput.value = expense.querySelector('.expense-name').textContent.trim();
-            signInput.value = expense.querySelector('#expense-sum').classList.contains('income') ? "true" : "false";
-            sumInput.value = parseInt(expense.querySelector('#expense-sum').textContent.trim().substring(2));
-            dateInput.value = expense.querySelector('.expense-date').textContent.trim();
+            idInput.value = expense.querySelector('.expenseId').textContent.trim();
+            nameInput.value = expense.querySelector('.expenseName').textContent.trim();
+            signInput.value = expense.querySelector('#expenseSum').classList.contains('income') ? "true" : "false";
+            sumInput.value = parseInt(expense.querySelector('#expenseSum').textContent.trim().substring(2));
+            dateInput.value = expense.querySelector('.expenseDate').textContent.trim();
             form.querySelector('#submitButton').textContent = 'Submit Changes';
         }
         
@@ -186,6 +263,9 @@
                 editExpense(expense);
             });
         });
+        username = "<%= username%>";
+        const socket = io();
+        socket.emit('login', username);
         </script>
 </body>
 </html>

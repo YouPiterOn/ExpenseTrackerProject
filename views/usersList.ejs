@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://example.com/image.svg">
+    <title>UserManagement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .users {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+        .sidebar {
+            margin-top: 60px;
+            flex-basis: 200px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+        .logOutBtn {
+            border-radius: 5px;
+            background-color: #ff6666;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .logOutBtn:hover {
+            background-color:#ae3838
+        }
+        h1 {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        ul {
+            margin-top: 0;
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            height:min-content;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .userItem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .userId {
+            display: none;
+        }
+        .username {
+            width: 33%;
+            font-weight: bold;
+        }
+        .youUsername {
+            color: green;
+            width: 33%;
+            font-weight: bold;
+        }
+        .adminRole {
+            color: green;
+        }
+        .userRole {
+            color: red;
+        }
+        .deleteBtn {
+            border-radius: 5px;
+            background-color: #ff6666;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .deleteBtn:hover {
+            background-color:#ae3838
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="users">
+            <h1>User Management</h1>
+            <ul>
+                <% users.forEach(user => { %>
+                    <li>
+                        <div class="userItem" id="<%= user.username%>">
+                            <% if (user.username == username) { %>
+                                <span class="youUsername"><%= user.username%></span><br>
+                            <% } else { %>
+                                <span class="username"><%= user.username %></span><br>
+                            <% } %>
+                            <% if (user.onlineStatus) { %>
+                                <span class="status">Online</span><br>
+                            <% } else { %>
+                                <span class="status">Offline</span><br>
+                            <% } %>
+                            <% if (user.roles.includes('ADMIN')) { %>
+                                <span id="userRole" class="adminRole">Admin</span>
+                            <% } else { %>
+                                <span id="userRole" class="userRole"> User </span>
+                            <% } %>
+                            <form action="/user/delete/<%= user.username %>" method="post">
+                                <button class="deleteBtn" type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+        <div class="sidebar">
+            <h3>Logged in as:</h3>
+            <p id="username"><%= username %></p>
+            <form action="/user/logout" method="post">
+                <button class="logOutBtn" type="submit">Log out</button>
+            </form>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        
+        const users = document.querySelector('.users');
+        const username = "<%= username%>"
+
+        socket.emit('login', username);
+
+        socket.on('userStatus', (data) => {
+            const user = users.querySelector('#'+data.username);
+            const status = user.querySelector('.status');
+            if(data.online) {
+                status.textContent = 'Online';
+            }
+            else {
+                status.textContent = 'Offline';
+            }
+        });
+    </script>
+</body>
+</html>
