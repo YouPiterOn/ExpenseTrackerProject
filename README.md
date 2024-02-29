@@ -78,13 +78,29 @@
 
   deletes the cookie with token
 
+*5. get '/edit'*
+
+  returns page to edit username or password
+
+*6. get '/edit/username'*
+
+  gets new username from body and changes it in the logged in user and all its expenses
+
+  fields in body: newUsername
+
+*6. get '/edit/password'*
+
+  gets old and new password from body, checks if old password if valid and changes password of logged in user to new
+
+  fields in body: oldPassword, newPassword
+
 *admin endpoints:*
 
-*5. get '/list'*
+*7. get '/list'*
 
   returns the page with list of users registered
 
-*6. post '/delete/:username'*
+*8. post '/delete/:username'*
 
   deletes user with parameter username and all expenses with this username
 
@@ -107,6 +123,12 @@ main page has a list of expenses in the database
 user list has list of users, their roles and online status
 
   to delete user press delete near user
+
+edit user page has two forms to edit username and edit password
+
+  to edit username write new username and press button 'Submit'
+
+  to edit password write your old password, new password and press button 'Submit'
 
 
 **test accounts**
