@@ -1,7 +1,6 @@
 const { json } = require("express");
 const { Expense } = require("../models/expense");
 const cache = require('memory-cache');
-const expenseHandlers = require("../handlers/expenseHandlers")
 
 
 async function ExpensesListController (req, res) {
@@ -43,19 +42,6 @@ async function ExpensesListController (req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
-    }
-}
-
-async function getExpenseByIdController (req, res) {
-    try {
-        const expense = expenseHandlers.findExpenseById(req.params.id);
-        if (expense == null) {
-          return res.status(404).send('Expense not found');
-        }
-        res.json(expense);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
     }
 }
 
@@ -117,7 +103,6 @@ async function postChangeExpenseController(req, res) {
 
 module.exports = {
     ExpensesListController,
-    getExpenseByIdController,
     postNewExpenseController,
     postDeleteExpenseController,
     postChangeExpenseController,

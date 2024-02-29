@@ -9,19 +9,13 @@ const routes = require('./routes');
 
 const { setOnline, setOffline } = require('./handlers/userHandlers');
 
-const whitelist = ['http://localhost:4000'];
-
 function originFunction(origin, callback) {
-    if (whitelist.includes(origin) || !origin) {
-        callback(null, true);
-    }
-    else {
-        callback(new Error('Not allowed by CORS'));
-    }
+    callback(null, true);
 }
+
 const corsOptions = {
-    origin:originFunction,
-}
+    origin: originFunction,
+};
 
 const app = express();
 app.use(cors(corsOptions));
@@ -36,7 +30,6 @@ const port = 4000;
 
 app.use('/', routes.expenseRoutes);
 app.use('/user', routes.userRoutes);
-app.use('/role', routes.roleRoutes);
 
 const server = http.createServer(app);
 
