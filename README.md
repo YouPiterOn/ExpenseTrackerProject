@@ -1,8 +1,8 @@
-#Expense Tracker app
+# Expense Tracker app
 
-##Entities:
+## Entities:
 
-###1. Expense
+### 1. Expense
   
   fields:
   
@@ -18,7 +18,7 @@
   
   date: String
 
-###2. User
+### 2. User
 
   fields:
 
@@ -32,87 +32,87 @@
 
   onlineStatus: Boolean
 
-#Endpoints:
+# Endpoints:
 
-##/
+## /
 
-###1. get '/'
+### 1. get '/'
 
   returns main page with a list of all created expenses
 
   fields in query: sortBy, sortOrder, month
   
-###2. post '/create'
+### 2. post '/create'
 
   creates new expense using data from req body
 
   fields in body: username, name, sum, sign, date
 
-###3. post '/delete/:id'
+### 3. post '/delete/:id'
 
   deletes expense with specified id
   
-###4. post '/change'
+### 4. post '/change'
 
   finds expense with id specifieds in req body and changes its fields according to the fields in req body
 
   fields in body: id, name, sum, sign, date
 
-###5. get '/months'
+### 5. get '/months'
 
   months view with list of months with compiled expenses in them
 
-##/user
+## /user
 
-###1. get '/'
+### 1. get '/'
 
   returns page for login and registration
 
-###2. post '/login'
+### 2. post '/login'
 
   gets username and password from body, login user with this data and creates cookie with login token
 
   fields in body: username, password
 
-###3. post '/register'
+### 3. post '/register'
 
   gets username and password from body, registers user with this data and creates cookie with login token
 
   fields in body: username, password
 
-###4. post '/logout'
+### 4. post '/logout'
 
   deletes the cookie with token
 
-###5. get '/edit'*
+### 5. get '/edit'*
 
   returns page to edit username or password
 
-###6. get '/edit/username'
+### 6. get '/edit/username'
 
   gets new username from body and changes it in the logged in user and all its expenses
 
   fields in body: newUsername
 
-###6. get '/edit/password'
+### 6. get '/edit/password'
 
   gets old and new password from body, checks if old password if valid and changes password of logged in user to new
 
   fields in body: oldPassword, newPassword
 
-###admin endpoints:
+### admin endpoints:
 
-###7. get '/list'
+### 7. get '/list'
 
   returns the page with list of users registered
 
-###8. post '/delete/:username'
+### 8. post '/delete/:username'
 
   deletes user with parameter username and all expenses with this username
 
-##Using guide
+## Using guide
 
-###login page 
+### login page 
 
   has two forms to login and register
 
@@ -120,7 +120,7 @@
 
   to register write username and password and press button 'Rigister'
 
-###main page 
+### main page 
 
   has a list of expenses in the database
 
@@ -134,7 +134,7 @@
 
   to change to month view press button 'View by month'
 
-###months view 
+### months view 
 
   has list of months with compiled expenses in them
 
@@ -144,13 +144,13 @@
 
   to change back to expenses view press button 'View by expenses'
 
-###user list 
+### user list 
 
   has list of users, their roles and online status
 
   to delete user press delete near user
 
-###edit user page 
+### edit user page 
 
   has two forms to edit username and edit password
 
@@ -159,7 +159,7 @@
   to edit password write your old password, new password and press button 'Submit'
 
 
-##test accounts
+## test accounts
 
 1. username: admin, password: admin
 
