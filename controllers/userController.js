@@ -14,8 +14,7 @@ async function loginPageController(req, res) {
     try {
         return res.render('login');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -36,8 +35,7 @@ async function registerController(req, res) {
         res.redirect('/');
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -68,8 +66,7 @@ async function logoutController(req, res) {
         res.clearCookie('token');
         res.redirect('/user');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -77,8 +74,7 @@ async function editUserPageController(req, res) {
     try {
         return res.render('editUser');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -107,8 +103,7 @@ async function editUsernameController(req, res) {
 
         res.redirect('/');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -130,8 +125,7 @@ async function editPasswordController(req, res) {
 
         res.redirect('/');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -143,8 +137,7 @@ async function usersListController(req, res) {
         const users = await User.find();
         res.render('usersList', { users, username });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -160,8 +153,7 @@ async function deleteController(req, res) {
             return res.status(404).send('User not found');
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 

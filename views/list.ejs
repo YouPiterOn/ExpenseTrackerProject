@@ -43,7 +43,7 @@
         .logOutBtn:hover {
             background-color:#ae3838;
         }
-        .editUserBtn {
+        .blueBtn {
             border-radius: 5px;
             background-color: #007bff;
             color: white;
@@ -51,7 +51,7 @@
             padding: 5px 10px;
             cursor: pointer;
         }
-        .editUserBtn:hover {
+        .blueBtn:hover {
             background-color:#0056b3;
         }
 
@@ -172,7 +172,12 @@
 <body>
     <div class="container">
         <div class="expenses">
-            <h1>Your expenses</h1>
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <h1>Expenses</h1>
+                <form action="/months" method="get">
+                    <button class="blueBtn" type="submit">View by months</button>
+                </form>
+            </div>
             <ul>
                 <li>
                     <form class="sortingForm" action="/" method="get">
@@ -201,9 +206,9 @@
                             <span class="expenseName"><%= expense.name %></span><br>
                             <span class="expenseId"><%= expense._id%></span>
                             <% if (expense.sign) { %>
-                                <span id="expenseSum" class="income">+ <%= expense.sum %></span>
+                                <span id="expenseSum" class="income">+<%= expense.sum %></span>
                             <% } else { %>
-                                <span id="expenseSum" class="expense">- <%= expense.sum %></span>
+                                <span id="expenseSum" class="expense">-<%= expense.sum %></span>
                             <% } %>
                             <span class="expenseDate"><%= expense.date %></span>
                             <form action="/delete/<%= expense._id %>" method="post">
@@ -241,7 +246,7 @@
             <h3>Logged in as</h3>
             <p id="username"><%= username %></p>
             <form action="/user/edit" method="get">
-                <button class="editUserBtn" type="submit">Edit user</button>
+                <button class="blueBtn" type="submit">Edit user</button>
             </form>
             <form action="/user/logout" method="post">
                 <button class="logOutBtn" type="submit">Log out</button>

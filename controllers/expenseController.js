@@ -38,10 +38,18 @@ async function ExpensesListController (req, res) {
             return sortOrder === 'asc' ? comparison : -comparison;
         });
 
+        let { month } = req.query
+
+        if(month) {
+            expenses = expenses.filter(expense => {
+                const date = expense.date.substring(0, 7)
+                return (date == month)
+            });
+        }
+
         res.render('list', { expenses, username });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
@@ -61,27 +69,27 @@ async function postNewExpenseController (req, res) {
 
 async function postDeleteExpenseController(req, res) {
     try {
-        const id = req.params.id
-        const username = req.user.username
-        Expense.findOneAndDelete({_id: id, username: username}).then(result => {
-            res.redirect('/');
-        })
-        .catch(error => {
-            console.error(error);
-            return res.status(404).send('Expense not found');
-        });
+        const id = req.params.id;
+        const username = req.user.username;
         
+        await Expense.findOneAndDelete({ _id: id, username: username });
+
+        const expenses = cache.get(username) || [];
+        const updatedExpenses = expenses.filter(expense => expense._id.toString() !== id);
+        cache.put(username, updatedExpenses);
+            
+        return res.redirect('/');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
 }
 
 async function postChangeExpenseController(req, res) {
     try {
         const { id, name, sum, sign, date } = req.body;
-        
-        const expense = await Expense.findOne({_id: id, username: req.user.username});
+        const username = req.user.username;
+
+        const expense = await Expense.findOne({ _id: id, username: username });
         
         if (!expense) {
             return res.status(404).json({ error: 'Expense not found' });
@@ -94,10 +102,72 @@ async function postChangeExpenseController(req, res) {
 
         await expense.save();
 
+        const expenses = cache.get(username) || [];
+        const updatedExpenses = expenses.map(exp => {
+            if (exp._id.toString() === id) {
+                return expense.toJSON();
+            }
+            return exp;
+        });
+        cache.put(username, updatedExpenses);
+
         res.redirect('/');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
+    }
+}
+
+class Month {
+    date = "";
+    income = 0;
+    expense = 0;
+    total = 0;
+}
+
+async function getMonthPageController(req, res) {
+    try{
+        const expenses = await Expense.find();
+    let months = [];
+    expenses.forEach(expense => {
+        const date = expense.date.substring(0, 7);
+        let month = months.find(month => month.date === date);
+        if (!month) {
+            month = new Month();
+            month.date = date;
+            months.push(month);
+        }
+
+        if(expense.sign) {
+            month.income += expense.sum;
+            month.total += expense.sum;
+        }
+        else {
+            month.expense -= expense.sum;
+            month.total -= expense.sum;
+        }
+    });
+
+    const { sortBy, sortOrder } = req.query;
+        if (sortBy && sortOrder) {
+            months.sort((a, b) => {
+                let comparison = 0;
+
+                if (sortBy === 'date') {
+                    const dateA = new Date(a[sortBy]);
+                    const dateB = new Date(b[sortBy]);
+                    comparison = dateA - dateB;
+                } 
+                else {
+                    comparison = a[sortBy] - b[sortBy];
+                }
+
+                return sortOrder === 'asc' ? comparison : -comparison;
+            });
+        }
+
+    res.render('monthList', { months, username: req.user.username })
+    } catch(error) {
+        next(error);
     }
 }
 
@@ -106,4 +176,5 @@ module.exports = {
     postNewExpenseController,
     postDeleteExpenseController,
     postChangeExpenseController,
+    getMonthPageController,
 }

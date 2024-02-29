@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://example.com/image.svg">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .expenses {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+
+
+        .sidebar {
+            margin-top: 60px;
+            flex-basis: 200px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+        .logOutBtn {
+            border-radius: 5px;
+            margin-top: 10px;
+            background-color: #ff6666;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .logOutBtn:hover {
+            background-color:#ae3838;
+        }
+        .blueBtn {
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .blueBtn:hover {
+            background-color:#0056b3;
+        }
+
+
+        h1 {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        ul {
+            margin-top: 0;
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            height:min-content;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+
+        .sortingForm {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .sortingForm label {
+            display: block;
+        }
+        .sortingForm input,
+        .sortingForm select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .sortingForm button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 20px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .sortingForm button:hover {
+            background-color: #0056b3;
+        }
+
+
+
+        .expenseItem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .expenseId {
+            display: none;
+        }
+        .expenseName {
+            width: 33%;
+            font-weight: bold;
+        }
+        .income {
+            color: green;
+        }
+        .expense {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="expenses">
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <h1>Months</h1>
+                <form action="/" method="get">
+                    <button class="blueBtn" type="submit">View by expenses</button>
+                </form>
+            </div>
+            <ul>
+                <li>
+                    <form class="sortingForm" action="/months" method="get">
+                        <div>
+                            <label for="sortBy">Sort By:</label>
+                            <select name="sortBy" id="sortBy">
+                                <option value="date">Date</option>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                                <option value="total">Total</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="sortOrder">Sort Order:</label>
+                            <select name="sortOrder" id="sortOrder">
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit">Sort</button>
+                    </form>
+                </li>
+                <% months.forEach(month => { %>
+                    <li>
+                        <div class="expenseItem">
+                            <span class="monthDate"><%= month.date %></span><br>
+                            <span id="monthIncome" class="income"><%= month.income %></span>
+                            <span id="monthExpense" class="expense"><%= month.expense %></span>
+                            <% if(month.total < 0) { %>
+                            <span id="monthTotal" class="expense">Total: <%= month.total %></span>
+                            <% } else { %>
+                                <span id="monthTotal" class="income">Total: <%= month.total %></span>
+                            <% } %>
+                            <form action="/" method="get">
+                                <input type="hidden" name="month" value="<%= month.date %>">
+                                <button class="blueBtn" type="submit">Show</button>
+                            </form>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+        <div class="sidebar">
+            <h3>Logged in as</h3>
+            <p id="username"><%= username %></p>
+            <form action="/user/edit" method="get">
+                <button class="editUserBtn" type="submit">Edit user</button>
+            </form>
+            <form action="/user/logout" method="post">
+                <button class="blueBtn" type="submit">Log out</button>
+            </form>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        username = "<%= username%>";
+        const socket = io();
+        socket.emit('login', username);
+        </script>
+</body>
+</html>
