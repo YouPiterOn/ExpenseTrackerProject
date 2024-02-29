@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="https://example.com/image.svg">
-    <title>ExpenseTracker</title>
+    <title>Expense Tracker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,6 +21,8 @@
             flex-grow: 1;
             margin-right: 20px;
         }
+
+
         .sidebar {
             margin-top: 60px;
             flex-basis: 200px;
@@ -31,6 +33,7 @@
         }
         .logOutBtn {
             border-radius: 5px;
+            margin-top: 10px;
             background-color: #ff6666;
             color: white;
             border: none;
@@ -38,8 +41,21 @@
             cursor: pointer;
         }
         .logOutBtn:hover {
-            background-color:#ae3838
+            background-color:#ae3838;
         }
+        .editUserBtn {
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .editUserBtn:hover {
+            background-color:#0056b3;
+        }
+
+
         h1 {
             margin-top: 12px;
             margin-bottom: 12px;
@@ -224,6 +240,9 @@
         <div class="sidebar">
             <h3>Logged in as</h3>
             <p id="username"><%= username %></p>
+            <form action="/user/edit" method="get">
+                <button class="editUserBtn" type="submit">Edit user</button>
+            </form>
             <form action="/user/logout" method="post">
                 <button class="logOutBtn" type="submit">Log out</button>
             </form>

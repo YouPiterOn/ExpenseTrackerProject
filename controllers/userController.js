@@ -73,6 +73,68 @@ async function logoutController(req, res) {
     }
 }
 
+async function editUserPageController(req, res) {
+    try {
+        return res.render('editUser');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+async function editUsernameController(req, res) {
+    try {
+        const username = req.user.username;
+        const { newUsername } = req.body;
+        const candidate = await User.findOne({ username: newUsername });
+        if(candidate) {
+            res.status(400).json({ error: 'User with this username already exist' });
+            return;
+        }
+        
+        const expenses = await Expense.find({ username: username });
+
+        expenses.forEach(expense => {
+            expense.username = newUsername;
+        })
+
+        const user = await User.findOne({ username: username });
+        user.username = newUsername;
+        await user.save();
+        
+        const token = CreateToken({username: user.username, roles: user.roles});
+        res.cookie('token', token);
+
+        res.redirect('/');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+async function editPasswordController(req, res) {
+    try {
+        const username = req.user.username;
+        const { oldPassword, newPassword } = req.body;
+        const user = await User.findOne({ username: username });
+
+        const validPassword = bcrypt.compareSync(oldPassword, user.password);
+        if (!validPassword) {
+            res.status(400).json({ error: 'Wrong old password' });
+            return;
+        }
+
+        const hashedPassword = bcrypt.hashSync(password, 1);
+        user.password = hashedPassword;
+        await user.save();
+
+        res.redirect('/');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 // ADMIN FUNCTIONS
 
 async function usersListController(req, res) {
@@ -108,6 +170,11 @@ module.exports = {
     registerController,
     loginController,
     logoutController,
+
     usersListController,
     deleteController,
+
+    editUserPageController,
+    editUsernameController,
+    editPasswordController,
 }
