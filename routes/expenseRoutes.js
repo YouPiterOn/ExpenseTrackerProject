@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/userMiddleware')
-const { errorHandler } = require('../middleware/errorMiddleware')
 
 const expenseController = require('../controllers/expenseController');
 
@@ -11,6 +10,5 @@ router.post('/delete/:id', verifyToken, expenseController.postDeleteExpenseContr
 router.post('/change', verifyToken, expenseController.postChangeExpenseController);
 router.get('/months', verifyToken, expenseController.getMonthPageController);
 
-router.use(errorHandler);
 
 module.exports = router;

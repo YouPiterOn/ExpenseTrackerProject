@@ -164,3 +164,25 @@
 1. username: admin, password: admin
 
 2. username: qwerty, password: qwerty
+
+# Task 11 documentation
+
+## Logging
+
+  two middlewares
+
+  - one is writing detailed logs about each request so server in file request.log
+
+  - the second is logging errors if them occur in file error.log
+
+## Error handling
+
+  - when errors occur they are transfered to middleware which write them into log and console
+
+  - if user tries to access not existing page it will trigger last middleware and 404 error will be thrown
+
+## Caching
+
+  - all the expenses after first load stores in cache
+
+  - when user creates/updates/deletes expense all these actions are performed with data not only in database but in cache also

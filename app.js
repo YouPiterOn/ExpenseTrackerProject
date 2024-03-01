@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('./mongooseConnection');
 const routes = require('./routes');
+const { errorMw, logMw } = require('./middleware/loggingMiddleware');
 
 const { setOnline, setOffline } = require('./handlers/userHandlers');
 
@@ -28,8 +29,13 @@ mongoose.set('strictQuery', false);
 
 const port = 4000;
 
+app.use(logMw);
 app.use('/', routes.expenseRoutes);
 app.use('/user', routes.userRoutes);
+app.use(errorMw);
+app.use((req, res, next) => {
+    res.status(404).json({ error: 'Page not found' });
+});
 
 const server = http.createServer(app);
 

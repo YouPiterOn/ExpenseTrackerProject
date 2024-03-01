@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken, verifyAdminToken } = require('../middleware/userMiddleware')
-const { errorHandler } = require('../middleware/errorMiddleware')
 
 const userController = require('../controllers/userController');
 
@@ -16,7 +15,5 @@ router.get('/edit/password', verifyToken, userController.editPasswordController)
 
 router.get('/list', verifyAdminToken,  userController.usersListController);
 router.post('/delete/:username', verifyAdminToken, userController.deleteController);
-
-router.use(errorHandler)
 
 module.exports = router;
